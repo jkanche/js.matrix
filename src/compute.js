@@ -1,20 +1,21 @@
 // generate a matrix of size n by m
-const n = 1000, m = 1000;
+const n = 10000, m = 10000;
 var matrix = [];
 
-function getRandomArbitrary(max) {
-    return Math.random() * max;
+function getRandomArbitrary() {
+    return Math.random();
 }
 
 for (var i = 0; i < n; i++) {
-    matrix[i] = new Uint16Array(m);
-    matrix[i] = matrix[i].map(() => getRandomArbitrary(255));
+    matrix[i] = new Float64Array(m);
+    matrix[i] = matrix[i].map(() => getRandomArbitrary());
 }
 
 // console.log(matrix);
 
 function colSum(matrix, order) {
-
+    console.log("##### COLSUM #####");
+    console.time("WHEE");
     var colSum;
 
     if (order) {
@@ -32,13 +33,14 @@ function colSum(matrix, order) {
     } else {
         colSum = matrix.reduce((x, y) => x.map((z, i) => z + y[i]));
     }
-    
-    console.log("##### COLSUM #####")
-    console.log(colSum);
+    console.timeEnd("WHEE");
+
     return colSum;
 }
 
 function rowSum(matrix, order) {
+    console.log("##### COLSUM #####");
+    console.time("WHEE");
     var rowSum;
     if (order) {
         var groups = order.filter((x, i, self) => self.indexOf(x) === i);
@@ -46,7 +48,6 @@ function rowSum(matrix, order) {
         groups.map((x,i) => {
             var indices = [];
             order.map((y ,j) => y == x ? indices.push(j) : false);
-
             if (indices.length == 1) {
                 rowSum.push(matrix[indices[0]]);
             } else {
@@ -57,13 +58,10 @@ function rowSum(matrix, order) {
         rowSum = matrix.map(z => z.reduce((x, y) => x + y));
     }
 
-    console.log("##### ROWSUM #####")
-    console.log(rowSum);
+    console.timeEnd("WHEE");
     return rowSum
 }
 
-rowSum(matrix, order = [1,2,1,2]);
 rowSum(matrix)
 // console.log("after row sum")
-colSum(matrix, order = [1,2,1,1]);
 colSum(matrix);
