@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>js to wasm array</title>
+  </head>
+  <body>
+
+    <script type="text/javascript">
+      function getRandomArbitrary() {
+        return Math.random();
+      }
+
+      fetch("a.out.wasm")
+        .then((response) => response.arrayBuffer())
+        .then((bytes) => WebAssembly.instantiate(bytes, {}))
+        .then((obj) => {
+          console.log(obj.instance.exports);
+
+          const {memory, printSumFloat64, printreturnarray} = obj.instance.exports;
+
+          // size of array
+          const n = 1000;
+
+          // create array in JS, use memory buffer from wasm
+          const mat0 = new Float64Array(
+            obj.instance.exports.memory.buffer,
+            0,
+            n
+          );
+          mat0.set(mat0.map(() => getRandomArbitrary()));
+
+          const sum = printSumFloat64(
+            mat0.byteOffset,
+            mat0.length
+          );
+          console.log(sum);
+
+          // array created in wasm [c code], but accessing in JS
+          result = new Float64Array(
+            memory.buffer,
+            printreturnarray(5),
+            5);
+
+          console.log(result);
+        });
+    </script>
+  </body>
+</html>
