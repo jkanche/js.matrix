@@ -1,3 +1,6 @@
 [submodule "libraries/tatami"]
 	path = libraries/tatami
 	url = https://github.com/LTLA/tatami
+[submodule "libraries/libscran"]
+	path = libraries/libscran
+	url = https://github.com/LTLA/libscran

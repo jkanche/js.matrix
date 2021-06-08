@@ -14,29 +14,20 @@
 
       var Module = {
         onRuntimeInitialized: function() {
-          // size of array
-          const n = 1000;
+          var instance = new Module.NumericMatrix(50, 20);
 
-          var memory = new WebAssembly.Memory({initial:10, maximum:100});
+          // Fill the C++ owned buffer.
+          var buffer = instance.buffer();
+          buffer.set(buffer.map(() => getRandomArbitrary()));
+          instance.construct();
 
-          const mat0 = new Float64Array(
-            memory.buffer,
-            0,
-            n
-          );
-          mat0.set(mat0.map(() => getRandomArbitrary()));
-
-          var instance = new Module.NumericMatrix(50, 20, mat0.byteOffset);
           console.log('Matrix dimensions: ' + instance.nrow() + ' ' + instance.ncol());
 
-          const dim = new Float64Array(
-            memory.buffer,
-            0,
-            50
-          );
-          instance.column(0, dim.byteOffset);
-          console.log("First matrix entry: " + dim[0]);
-
+          var qc_engine = new Module.PerCellQCMetrics();
+          qc_engine.compute(instance);
+          var sums = qc_engine.sums();
+          console.log(sums);
+          
           instance.delete();
         }
       };
