@@ -3,7 +3,7 @@
 First run this to generate the WASM and JS module:
 
 ```sh
-emcc --bind -I../libraries/tatami/include -std=c++1z target.cpp -o target.js
+emcc --bind -I../libraries/tatami/include -I../libraries/libscran/include -std=c++1z target.cpp -o target.js
 ```
 
 Then set up a local HTTP server:
