@@ -1,0 +1,3 @@
+[submodule "libraries/tatami"]
+	path = libraries/tatami
+	url = https://github.com/LTLA/tatami
