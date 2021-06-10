@@ -17,22 +17,45 @@
           // size of array
           const n = 1000;
 
-          var memory = new WebAssembly.Memory({initial:10, maximum:100});
+          // still doesn't work
+          // const test = new Float64Array(n);
+          // test.set(test.map(() => getRandomArbitrary()));
 
+          // let buffer = Module._malloc(test.length * test.BYTES_PER_ELEMENT);
+          // Module.HEAPF64.set(test, buffer >> 2);
+
+          // var nrow = 50, ncol = 20;
+          // var instance = new Module.NumericMatrix(nrow, ncol, test.byteOffset);
+          // console.log('Matrix dimensions: ' + instance.nrow() + ' ' + instance.ncol());
+
+          // const dim = new Float64Array(ncol);
+
+          // instance.column(0, dim.byteOffset);
+          // console.log("First matrix entry: " + dim[0]);
+
+          // instance.delete();
+
+          // eventually figured out the Module initialized memory space
+          Module["wasmMemory"] = Module["asm"]["memory"];
+
+          let offset = 0;
           const mat0 = new Float64Array(
-            memory.buffer,
-            0,
+            Module["wasmMemory"].buffer,
+            offset,
             n
           );
           mat0.set(mat0.map(() => getRandomArbitrary()));
+          
+          var nrow = 50, ncol = 20;
 
-          var instance = new Module.NumericMatrix(50, 20, mat0.byteOffset);
+          var instance = new Module.NumericMatrix(nrow, ncol, mat0.byteOffset);
           console.log('Matrix dimensions: ' + instance.nrow() + ' ' + instance.ncol());
 
+          offset += mat0.byteLength;
           const dim = new Float64Array(
-            memory.buffer,
-            0,
-            50
+            Module["wasmMemory"].buffer,
+            offset,
+            ncol
           );
           instance.column(0, dim.byteOffset);
           console.log("First matrix entry: " + dim[0]);
