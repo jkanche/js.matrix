@@ -55,9 +55,9 @@ private:
 EMSCRIPTEN_BINDINGS(my_class_example) {
     emscripten::class_<NumericMatrix>("NumericMatrix")
         .constructor<int, int, uintptr_t>()
-        .function("nrow", &NumericMatrix::nrow)
-        .function("ncol", &NumericMatrix::ncol)
-        .function("row", &NumericMatrix::row)
-        .function("column", &NumericMatrix::column)
+        .function("nrow", &NumericMatrix::nrow, emscripten::allow_raw_pointers())
+        .function("ncol", &NumericMatrix::ncol, emscripten::allow_raw_pointers())
+        .function("row", &NumericMatrix::row, emscripten::allow_raw_pointers())
+        .function("column", &NumericMatrix::column, emscripten::allow_raw_pointers())
         ;
 }
