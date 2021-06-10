@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>js to wasm array</title>
+  </head>
+  <body>
+
+    <script type="text/javascript">
+      function getRandomArbitrary() {
+        return Math.random();
+      }
+
+
+      var Module = {
+        onRuntimeInitialized: function() {
+          console.log("loaded");
+
+          var n = 10;
+
+          var memory = new WebAssembly.Memory({initial:10, maximum:100});
+
+          let offset = 0;
+          const mat0 = new Float64Array(
+            memory.buffer,
+            offset,
+            n
+          );
+          mat0.set(mat0.map(() => getRandomArbitrary()));
+
+          console.log(mat0);
+
+          var sum = Module.printSumFloat64(mat0.byteOffset, n);
+          console.log(sum);
+
+          offset += mat0.byteLength;
+
+          const dim = new Float64Array(
+            memory.buffer,
+            offset,
+            1
+          );
+
+          console.log(Module.getAtPosition(1, mat0.byeOffset, dim.byteOffset))
+          // console.log("element at index: " + dim);
+
+          instance.delete();
+        }
+      }
+    </script>
+    <script src="print.js"></script>
+  </body>
+</html>
